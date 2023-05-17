@@ -10,6 +10,7 @@ package com.javatunes.catalog;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 // OF COURSE THIS CLASS DOESN'T COMPILE
@@ -74,7 +75,8 @@ public class InMemoryCatalog implements Catalog {
 
     @Override
     public Collection<MusicItem> getAll() {
-        return catalogData;
+        // read-only
+        return Collections.unmodifiableCollection(catalogData);
     }
 
     /**
@@ -105,7 +107,11 @@ public class InMemoryCatalog implements Catalog {
      */
     public Collection<MusicItem> selfTitledAlbums() {
         Collection<MusicItem> result = new ArrayList<>();
-
+        for (MusicItem item : catalogData) {
+            if (item.getTitle().equals(item.getArtist())) {
+                result.add(item);
+            }
+        }
         return result;
     }
 
@@ -115,7 +121,12 @@ public class InMemoryCatalog implements Catalog {
      */
     public Collection<MusicItem> getRockItemAtSpecifiedPrice(double maxPrice) {
         Collection<MusicItem> result = new ArrayList<>();
-
+        for (MusicItem item : catalogData) {
+            if (item.getMusicCategory() == MusicCategory.ROCK
+                    && item.getPrice() <= maxPrice) {
+                result.add(item);
+            }
+        }
         return result;
     }
 
